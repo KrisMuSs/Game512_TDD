@@ -55,6 +55,10 @@ final class GameLogic: ObservableObject {
             return ([4, 0, 0, 0], 4)
         }
 
+        if line == [2, 2, 2, 0] {
+            return ([4, 2, 0, 0], 4)
+        }
+        
         return (line, 0)
     }
     

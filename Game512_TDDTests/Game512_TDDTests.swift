@@ -92,6 +92,14 @@ final class Game512_TDDTests: XCTestCase {
         XCTAssertEqual(result.gained, 4, "За слияние двух двоек должно начисляться 4 очка")
     }
     
+    func test_moveLineLeftMerge2() {
+        let sut = GameLogic()
+
+        let result = sut.moveLineLeft([2, 2, 2, 0])
+
+        XCTAssertEqual(result.line, [4, 2, 0, 0], "Плитка не должна сливаться дважды за один ход")
+    }
+    
     
 }
 
