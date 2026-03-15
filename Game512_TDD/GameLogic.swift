@@ -11,6 +11,8 @@ final class GameLogic: ObservableObject {
     
     
     func newGame() {
+            //todo пока сбрасываем только счёт и сообщение, позже добавить очистку поля
+            message = ""
             score = 0
-        }
+            }
 }
