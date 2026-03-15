@@ -2,6 +2,7 @@
 import XCTest
 @testable import Game512_TDD
 
+
 final class Game512_TDDTests: XCTestCase {
     
     func test_gameLogicCreation() {
@@ -47,8 +48,9 @@ final class Game512_TDDTests: XCTestCase {
         )
     }
     
-    func test_newGameAddsTwoStartTiles() {
-        let logic = GameLogic(spawner: FixedSpawner())
+    func test_newGameAddTwoStartTiles() {
+        
+        let logic = GameLogic()
 
         logic.newGame()
 
