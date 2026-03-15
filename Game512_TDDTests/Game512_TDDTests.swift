@@ -84,6 +84,14 @@ final class Game512_TDDTests: XCTestCase {
     }
     
     
+    func test_moveLineLeftPoints() {
+        let logic = GameLogic()
+
+        let result = logic.moveLineLeft([2, 2, 0, 0])
+
+        XCTAssertEqual(result.gained, 4, "За слияние двух двоек должно начисляться 4 очка")
+    }
+    
     
 }
 
