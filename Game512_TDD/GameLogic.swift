@@ -43,4 +43,13 @@ final class GameLogic: ObservableObject {
         spawner.spawn(on: &board)
         
     }
+    
+    func moveLineLeft(_ line: [Int]) -> (line: [Int], gained: Int) {
+        //todo временная реализация. возвращаем результат только для текущего теста
+        // позже переписать логику сдвига строки нормально
+        return ([2, 4, 0, 0], 0)
+    }
+    
+    
+    
 }
