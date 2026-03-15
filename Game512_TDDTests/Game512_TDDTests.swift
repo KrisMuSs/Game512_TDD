@@ -14,6 +14,11 @@ final class Game512_TDDTests: XCTestCase {
            XCTAssertEqual(logica.board.count, 4)
     }
     
+    func test_scoreStartsFromZero() {
+        let logica = GameLogic()
+        XCTAssertEqual(logica.score, 0)
+    }
+    
 }
 
 
