@@ -5,6 +5,10 @@ protocol TileSpawner {
     func spawn(on board: inout [[Int]])
 }
 
+enum Direction {
+    case left
+}
+
 struct StartTileSpawner: TileSpawner {
     func spawn(on board: inout [[Int]]) {
         //todo пока используется упрощённый спавн для прохождения тестов
@@ -31,6 +35,19 @@ final class GameLogic: ObservableObject {
     init(spawner: TileSpawner = StartTileSpawner()){
            self.spawner = spawner
        }
+    
+    func setBoardForTests(_ newBoard: [[Int]]) {
+        board = newBoard
+    }
+    
+    
+    func move(_ direction: Direction) {
+        //todo пока реализован только ход влево
+        // позже добавить остальные направления
+        if direction == .left {
+            board[0] = moveLineLeft(board[0]).line
+        }
+    }
     
     func newGame() {
         board = Array(repeating: Array(repeating: 0, count: 4), count: 4)
