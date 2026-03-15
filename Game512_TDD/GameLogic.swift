@@ -45,21 +45,28 @@ final class GameLogic: ObservableObject {
     }
     
     func moveLineLeft(_ line: [Int]) -> (line: [Int], gained: Int) {
-        //todo временная реализация: пока обрабатываем только проверяемые случаи
-        // позже заменить на общую логику сдвига и слияния
-        if line == [0, 2, 0, 4] {
-            return ([2, 4, 0, 0], 0)
+        var values = line.filter { $0 != 0 }
+        var result: [Int] = []
+        var gained = 0
+        var index = 0
+
+        while index < values.count {
+            if index + 1 < values.count && values[index] == values[index + 1] {
+                let merged = values[index] * 2
+                result.append(merged)
+                gained += merged
+                index += 2
+            } else {
+                result.append(values[index])
+                index += 1
+            }
         }
 
-        if line == [2, 2, 0, 0] {
-            return ([4, 0, 0, 0], 4)
+        while result.count < 4 {
+            result.append(0)
         }
 
-        if line == [2, 2, 2, 0] {
-            return ([4, 2, 0, 0], 4)
-        }
-        
-        return (line, 0)
+        return (result, gained)
     }
     
     
