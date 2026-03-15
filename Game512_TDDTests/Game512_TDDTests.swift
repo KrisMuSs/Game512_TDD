@@ -1,5 +1,4 @@
 
-
 import XCTest
 @testable import Game512_TDD
 
@@ -9,4 +8,13 @@ final class Game512_TDDTests: XCTestCase {
            let logica = GameLogic()
            XCTAssertNotNil(logica)
        }
+    
+    func test_boardExists() {
+           let logica = GameLogic()
+           XCTAssertEqual(logica.board.count, 4)
+    }
+    
 }
+
+
+
