@@ -42,10 +42,22 @@ final class GameLogic: ObservableObject {
     
     
     func move(_ direction: Direction) {
-        //todo пока реализован только ход влево
-        // позже добавить остальные направления
-        if direction == .left {
-            board[0] = moveLineLeft(board[0]).line
+        let before = board
+
+        switch direction {
+        case .left:
+            var gainedTotal = 0
+
+            for row in 0..<4 {
+                let result = moveLineLeft(board[row])
+                board[row] = result.line
+                gainedTotal += result.gained
+            }
+
+            if board != before {
+                score += gainedTotal
+                spawner.spawn(on: &board)
+            }
         }
     }
     
