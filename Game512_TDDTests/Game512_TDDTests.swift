@@ -75,7 +75,13 @@ final class Game512_TDDTests: XCTestCase {
         XCTAssertEqual(result.line, [2, 4, 0, 0], "Строка должна сдвигаться влево")
     }
     
-    
+    func test_moveLineLeftMerges() {
+        let logic = GameLogic()
+
+        let result = logic.moveLineLeft([2, 2, 0, 0])
+
+        XCTAssertEqual(result.line, [4, 0, 0, 0], "Одинаковые плитки должны сливаться")
+    }
     
     
     
