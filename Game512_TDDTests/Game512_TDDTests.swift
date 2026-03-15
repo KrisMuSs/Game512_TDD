@@ -6,29 +6,45 @@ final class Game512_TDDTests: XCTestCase {
     
     func test_gameLogicCreation() {
            let logica = GameLogic()
-           XCTAssertNotNil(logica)
+           XCTAssertNotNil(logica, "GameLogic не создаётся")
        }
     
     func test_boardExists() {
            let logica = GameLogic()
-           XCTAssertEqual(logica.board.count, 4)
+           XCTAssertEqual(logica.board.count, 4, "В поле должно быть 4 строки")
     }
     
     func test_scoreStartsFromZero() {
         let logica = GameLogic()
-        XCTAssertEqual(logica.score, 0)
+        XCTAssertEqual(logica.score, 0, "Начальный счёт должен быть 0")
     }
     
     func test_newGameResetsScore() {
         let logica = GameLogic()
         logica.newGame()
-        XCTAssertEqual(logica.score, 0)
+        XCTAssertEqual(logica.score, 0, "newGame() должен сбрасывать счёт")
     }
     
     func test_newGameClearMessage() {
         let logica = GameLogic()
         logica.newGame()
-        XCTAssertEqual(logica.message, "")
+        XCTAssertEqual(logica.message, "", "newGame() должен очищать сообщение")
+    }
+    
+    func test_newGameClearsBoard() {
+        let logica = GameLogic()
+        logica.newGame()
+
+        XCTAssertEqual(
+            logica.board,
+            [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+            ],
+            "После newGame() поле должно быть очищено"
+        )
     }
 }
 
