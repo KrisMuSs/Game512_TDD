@@ -46,6 +46,24 @@ final class Game512_TDDTests: XCTestCase {
             "После newGame() поле должно быть очищено"
         )
     }
+    
+    func test_newGameAddsTwoStartTiles() {
+        let logic = GameLogic(spawner: FixedSpawner())
+
+        logic.newGame()
+
+        var count = 0
+
+        for row in logic.board {
+            for value in row {
+                if value != 0 {
+                    count += 1
+                }
+            }
+        }
+
+        XCTAssertEqual(count, 2, "После newGame() должно быть две плитки")
+    }
 }
 
 
