@@ -7,11 +7,11 @@ protocol TileSpawner {
 
 struct StartTileSpawner: TileSpawner {
     func spawn(on board: inout [[Int]]) {
-        //todo временная реализация. ставим 2 в первую свободную клетку
-        // позже заменить на случайный спавн плитки
-        for r in 0..<4 {
-            for c in 0..<4 where board[r][c] == 0 {
-                board[r][c] = 2
+        //todo пока используется упрощённый спавн для прохождения тестов
+        // позже заменить на случайный выбор позиции и значения плитки
+        for row in 0..<4 {
+            for column in 0..<4 where board[row][column] == 0 {
+                board[row][column] = 2
                 return
             }
         }

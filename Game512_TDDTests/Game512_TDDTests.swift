@@ -101,6 +101,24 @@ final class Game512_TDDTests: XCTestCase {
     }
     
     
+    func test_moveLeftButton() {
+        let logic = GameLogic()
+        logic.setBoardForTests([
+            [0, 2, 0, 4],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ])
+
+        logic.move(.left)
+
+        XCTAssertEqual(
+            logic.board[0],
+            [2, 4, 0, 0],
+            "Ход влево должен сдвигать первую строку"
+        )
+    }
+    
 }
 
 
