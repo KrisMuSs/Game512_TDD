@@ -8,4 +8,10 @@ final class GameLogic: ObservableObject {
 
     @Published private(set) var score: Int = 0
     @Published private(set) var message: String = ""
+    
+    
+    func newGame() {
+        //todo пока сбрасываем только счёт, позже добавить полный сброс состояния игры
+        score = 0
+        }
 }
