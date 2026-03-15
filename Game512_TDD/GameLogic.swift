@@ -95,20 +95,25 @@ final class GameLogic: ObservableObject {
             }
             
         case .down:
-            //todo временная реализация. пока обрабатываем только первый тест для первого столбца
-            // позже переписать на общую логику хода вниз
-            if board == [
-                [2, 0, 0, 0],
-                [0, 0, 0, 0],
-                [4, 0, 0, 0],
-                [0, 0, 0, 0]
-            ] {
-                board = [
-                    [0, 0, 0, 0],
-                    [0, 0, 0, 0],
-                    [2, 0, 0, 0],
-                    [4, 0, 0, 0]
-                ]
+            var gainedTotal = 0
+
+            for column in 0..<4 {
+                let values = [board[0][column], board[1][column], board[2][column], board[3][column]]
+                let reversed = Array(values.reversed())
+                let result = moveLineLeft(reversed)
+                let output = Array(result.line.reversed())
+
+                board[0][column] = output[0]
+                board[1][column] = output[1]
+                board[2][column] = output[2]
+                board[3][column] = output[3]
+
+                gainedTotal += result.gained
+            }
+
+            if board != before {
+                score += gainedTotal
+                spawner.spawn(on: &board)
             }
         }
     }
