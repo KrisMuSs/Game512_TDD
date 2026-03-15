@@ -11,7 +11,6 @@ final class GameLogic: ObservableObject {
     
     
     func newGame() {
-        //todo пока сбрасываем только счёт, позже добавить полный сброс состояния игры
-        score = 0
+            score = 0
         }
 }
