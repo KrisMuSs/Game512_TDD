@@ -27,6 +27,7 @@
 		FAB2C54A2F66E9280006C29F /* Game512_TDD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Game512_TDD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAB2C55A2F66E92D0006C29F /* Game512_TDDTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Game512_TDDTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAB2C5642F66E92D0006C29F /* Game512_TDDUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Game512_TDDUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAB2C5852F66F4610006C29F /* Game512_TDD.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = Game512_TDD.xctestplan; path = ../Game512_TDD.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		FAB2C5412F66E9280006C29F = {
 			isa = PBXGroup;
 			children = (
+				FAB2C5852F66F4610006C29F /* Game512_TDD.xctestplan */,
 				FAB2C54C2F66E9280006C29F /* Game512_TDD */,
 				FAB2C55D2F66E92D0006C29F /* Game512_TDDTests */,
 				FAB2C5672F66E92D0006C29F /* Game512_TDDUITests */,

@@ -1,9 +1,4 @@
-//
-//  Game512_TDDUITestsLaunchTests.swift
-//  Game512_TDDUITests
-//
-//  Created by Артем Мерзликин on 15.03.2026.
-//
+
 
 import XCTest
 
