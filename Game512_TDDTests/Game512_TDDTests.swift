@@ -160,6 +160,32 @@ final class Game512_TDDTests: XCTestCase {
         )
     }
     
+    
+    
+    func test_moveDownButton() {
+        let logic = GameLogic()
+        logic.setBoardForTests([
+            [2, 0, 0, 0],
+            [0, 0, 0, 0],
+            [4, 0, 0, 0],
+            [0, 0, 0, 0]
+        ])
+
+        logic.move(.down)
+
+        XCTAssertEqual(
+            logic.board,
+            [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [2, 0, 0, 0],
+                [4, 0, 0, 0]
+            ],
+            "Ход вниз должен сдвигать первый столбец"
+        )
+    }
+    
+    
 }
 
 

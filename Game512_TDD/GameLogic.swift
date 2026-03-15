@@ -6,7 +6,7 @@ protocol TileSpawner {
 }
 
 enum Direction {
-    case left, right, up
+    case left, right, up, down
 }
 
 struct StartTileSpawner: TileSpawner {
