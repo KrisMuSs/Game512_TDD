@@ -30,9 +30,30 @@
 		FAB2C5852F66F4610006C29F /* Game512_TDD.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = Game512_TDD.xctestplan; path = ../Game512_TDD.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FAB2C58A2F66F6C40006C29F /* Exceptions for "Game512_TDD" folder in "Game512_TDDTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				GameLogic.swift,
+			);
+			target = FAB2C5592F66E92D0006C29F /* Game512_TDDTests */;
+		};
+		FAB2C58B2F66F6C40006C29F /* Exceptions for "Game512_TDD" folder in "Game512_TDDUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				GameLogic.swift,
+			);
+			target = FAB2C5632F66E92D0006C29F /* Game512_TDDUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FAB2C54C2F66E9280006C29F /* Game512_TDD */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FAB2C58A2F66F6C40006C29F /* Exceptions for "Game512_TDD" folder in "Game512_TDDTests" target */,
+				FAB2C58B2F66F6C40006C29F /* Exceptions for "Game512_TDD" folder in "Game512_TDDUITests" target */,
+			);
 			path = Game512_TDD;
 			sourceTree = "<group>";
 		};
