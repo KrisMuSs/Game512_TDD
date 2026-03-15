@@ -66,6 +66,19 @@ final class Game512_TDDTests: XCTestCase {
 
         XCTAssertEqual(count, 2, "После newGame() должно быть две плитки")
     }
+    
+    func test_moveLineLeft() {
+        let logic = GameLogic()
+
+        let result = logic.moveLineLeft([0, 2, 0, 4])
+
+        XCTAssertEqual(result.line, [2, 4, 0, 0], "Строка должна сдвигаться влево")
+    }
+    
+    
+    
+    
+    
 }
 
 
