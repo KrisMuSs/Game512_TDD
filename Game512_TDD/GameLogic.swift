@@ -6,7 +6,7 @@ protocol TileSpawner {
 }
 
 enum Direction {
-    case left, right
+    case left, right, up
 }
 
 struct StartTileSpawner: TileSpawner {
@@ -58,13 +58,21 @@ final class GameLogic: ObservableObject {
                 score += gainedTotal
                 spawner.spawn(on: &board)
             }
+
         case .right:
-            //todo временная реализация: пока обрабатываем только первый тест для первой строки
-            // позже переписать на общую логику хода вправо
-            if board[0] == [2, 0, 4, 0] {
-                board[0] = [0, 0, 2, 4]
+            var gainedTotal = 0
+
+            for row in 0..<4 {
+                let reversed = Array(board[row].reversed())
+                let result = moveLineLeft(reversed)
+                board[row] = Array(result.line.reversed())
+                gainedTotal += result.gained
             }
-            
+
+            if board != before {
+                score += gainedTotal
+                spawner.spawn(on: &board)
+            }
         }
     }
     
