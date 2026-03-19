@@ -185,6 +185,19 @@ final class Game512_TDDTests: XCTestCase {
         )
     }
     
+    func test_WinMessage() {
+        let sut = GameLogic()
+        sut.setBoardForTests([
+            [512, 0, 0, 0],
+            [0,   0, 0, 0],
+            [0,   0, 0, 0],
+            [0,   0, 0, 0]
+        ])
+
+        sut.move(.left)
+
+        XCTAssertEqual(sut.message, "Ты победил! (512)", "Если на поле есть 512, должно появиться сообщение о победе")
+    }
     
 }
 
