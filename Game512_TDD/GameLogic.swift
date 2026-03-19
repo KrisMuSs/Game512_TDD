@@ -11,8 +11,8 @@ enum Direction {
 
 struct StartTileSpawner: TileSpawner {
     func spawn(on board: inout [[Int]]) {
-        //todo пока плитка ставится в первую свободную клетку для прохождения тестов
-        // позже переписать на случайный выбор пустой позиции и значения
+        //todo пока используется упрощённый спавн для прохождения тестов
+        // позже заменить на случайный выбор позиции и значения плитки
         for row in 0..<4 {
             for column in 0..<4 where board[row][column] == 0 {
                 board[row][column] = 2
@@ -26,14 +26,14 @@ final class GameLogic: ObservableObject {
 
     @Published private(set) var board: [[Int]] =
         Array(repeating: Array(repeating: 0, count: 4), count: 4)
+
     @Published private(set) var score: Int = 0
     @Published private(set) var message: String = ""
 
     private let target = 512
     private let winText = "Ты победил! (512)"
-
     private let overText = "Ты проиграл!"
-    
+
     private let spawner: TileSpawner
 
     init(spawner: TileSpawner = StartTileSpawner()) {
@@ -56,6 +56,7 @@ final class GameLogic: ObservableObject {
     }
 
     func moveLineLeft(_ line: [Int]) -> (line: [Int], gained: Int) {
+        //todo позже проверить дополнительные комбинации и при необходимости упростить алгоритм
         let values = line.filter { $0 != 0 }
         var result: [Int] = []
         var gained = 0
@@ -81,8 +82,6 @@ final class GameLogic: ObservableObject {
     }
 
     func move(_ direction: Direction) {
-        //todo позже убрать дублирование логики left, right, up и down
-        // и выделить общую обработку движения
         let before = board
 
         switch direction {
@@ -171,17 +170,33 @@ final class GameLogic: ObservableObject {
         updateMessage()
     }
 
+    private func hasMoves() -> Bool {
+        //todo позже упростить проверку доступных ходов при необходимости
+        if board.flatMap({ $0 }).contains(0) {
+            return true
+        }
+
+        for row in 0..<4 {
+            for column in 0..<4 {
+                let value = board[row][column]
+
+                if column + 1 < 4, board[row][column + 1] == value {
+                    return true
+                }
+
+                if row + 1 < 4, board[row + 1][column] == value {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
     private func updateMessage() {
-        //todo пока проверяем победу и один сценарий проигрыша
-        // позже вынести проверку доступных ходов в отдельный метод
         if board.flatMap({ $0 }).contains(target) {
             message = winText
-        } else if board == [
-            [2, 4, 2, 4],
-            [4, 2, 4, 2],
-            [2, 4, 2, 4],
-            [4, 2, 4, 2]
-        ] {
+        } else if hasMoves() == false {
             message = overText
         } else {
             message = ""
