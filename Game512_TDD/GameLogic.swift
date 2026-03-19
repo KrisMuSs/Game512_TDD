@@ -29,7 +29,10 @@ final class GameLogic: ObservableObject {
 
     @Published private(set) var score: Int = 0
     @Published private(set) var message: String = ""
-    
+
+    private let target = 512
+    private let winText = "Ты победил! (512)"
+
     private let spawner: TileSpawner
 
     init(spawner: TileSpawner = StartTileSpawner()){
@@ -39,8 +42,32 @@ final class GameLogic: ObservableObject {
     func setBoardForTests(_ newBoard: [[Int]]) {
         board = newBoard
     }
-    
-    
+
+    func moveLineLeft(_ line: [Int]) -> (line: [Int], gained: Int) {
+        let values = line.filter { $0 != 0 }
+        var result: [Int] = []
+        var gained = 0
+        var index = 0
+
+        while index < values.count {
+            if index + 1 < values.count && values[index] == values[index + 1] {
+                let merged = values[index] * 2
+                result.append(merged)
+                gained += merged
+                index += 2
+            } else {
+                result.append(values[index])
+                index += 1
+            }
+        }
+
+        while result.count < 4 {
+            result.append(0)
+        }
+
+        return (result, gained)
+    }
+
     func move(_ direction: Direction) {
         let before = board
 
@@ -73,7 +100,7 @@ final class GameLogic: ObservableObject {
                 score += gainedTotal
                 spawner.spawn(on: &board)
             }
-            
+
         case .up:
             var gainedTotal = 0
 
@@ -93,7 +120,7 @@ final class GameLogic: ObservableObject {
                 score += gainedTotal
                 spawner.spawn(on: &board)
             }
-            
+
         case .down:
             var gainedTotal = 0
 
@@ -116,45 +143,11 @@ final class GameLogic: ObservableObject {
                 spawner.spawn(on: &board)
             }
         }
-    }
-    
-    func newGame() {
-        board = Array(repeating: Array(repeating: 0, count: 4), count: 4)
-        message = ""
-        score = 0
-        
-        //todo пока новая игра только очищает состояние и вызывает спавн
-        //позже добавить нормальную стартовую расстановку плиток
-        spawner.spawn(on: &board)
-        spawner.spawn(on: &board)
-        
-    }
-    
-    func moveLineLeft(_ line: [Int]) -> (line: [Int], gained: Int) {
-        var values = line.filter { $0 != 0 }
-        var result: [Int] = []
-        var gained = 0
-        var index = 0
 
-        while index < values.count {
-            if index + 1 < values.count && values[index] == values[index + 1] {
-                let merged = values[index] * 2
-                result.append(merged)
-                gained += merged
-                index += 2
-            } else {
-                result.append(values[index])
-                index += 1
-            }
+        if board.flatMap({ $0 }).contains(512) {
+            //todo временная реализация: пока проверяем только победу
+            // позже вынести обновление состояния игры в отдельный метод
+            message = winText
         }
-
-        while result.count < 4 {
-            result.append(0)
-        }
-
-        return (result, gained)
     }
-    
-    
-    
 }
