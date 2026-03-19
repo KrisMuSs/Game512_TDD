@@ -9,16 +9,23 @@ enum Direction {
     case left, right, up, down
 }
 
-struct StartTileSpawner: TileSpawner {
+struct RandomTileSpawner: TileSpawner {
     func spawn(on board: inout [[Int]]) {
-        //todo пока используется упрощённый спавн для прохождения тестов
-        // позже заменить на случайный выбор позиции и значения плитки
+
+        var emptyCells: [(row: Int, column: Int)] = []
+
         for row in 0..<4 {
             for column in 0..<4 where board[row][column] == 0 {
-                board[row][column] = 2
-                return
+                emptyCells.append((row, column))
             }
         }
+
+        guard let position = emptyCells.randomElement() else {
+            return
+        }
+
+        let value = Int.random(in: 0..<10) == 0 ? 4 : 2
+        board[position.row][position.column] = value
     }
 }
 
@@ -26,7 +33,6 @@ final class GameLogic: ObservableObject {
 
     @Published private(set) var board: [[Int]] =
         Array(repeating: Array(repeating: 0, count: 4), count: 4)
-
     @Published private(set) var score: Int = 0
     @Published private(set) var message: String = ""
 
@@ -34,9 +40,13 @@ final class GameLogic: ObservableObject {
     private let winText = "Ты победил! (512)"
     private let overText = "Ты проиграл!"
 
+    private var isFinished: Bool {
+        message == winText || message == overText
+    }
+
     private let spawner: TileSpawner
 
-    init(spawner: TileSpawner = StartTileSpawner()) {
+    init(spawner: TileSpawner = RandomTileSpawner()) {
         self.spawner = spawner
     }
 
@@ -45,8 +55,7 @@ final class GameLogic: ObservableObject {
         score = 0
         message = ""
 
-        //todo пока новая игра использует упрощённый старт через два вызова спавна
-        // позже переписать старт игры после реализации полной игровой логики
+
         spawner.spawn(on: &board)
         spawner.spawn(on: &board)
     }
@@ -56,7 +65,6 @@ final class GameLogic: ObservableObject {
     }
 
     func moveLineLeft(_ line: [Int]) -> (line: [Int], gained: Int) {
-        //todo позже проверить дополнительные комбинации и при необходимости упростить алгоритм
         let values = line.filter { $0 != 0 }
         var result: [Int] = []
         var gained = 0
@@ -81,7 +89,33 @@ final class GameLogic: ObservableObject {
         return (result, gained)
     }
 
+    private func moveLineRight(_ line: [Int]) -> (line: [Int], gained: Int) {
+        let reversed = Array(line.reversed())
+        let result = moveLineLeft(reversed)
+        return (Array(result.line.reversed()), result.gained)
+    }
+
+    private func getColumn(_ index: Int) -> [Int] {
+        [
+            board[0][index],
+            board[1][index],
+            board[2][index],
+            board[3][index]
+        ]
+    }
+
+    private func setColumn(_ index: Int, values: [Int]) {
+        board[0][index] = values[0]
+        board[1][index] = values[1]
+        board[2][index] = values[2]
+        board[3][index] = values[3]
+    }
+
     func move(_ direction: Direction) {
+        if isFinished {
+            return
+        }
+
         let before = board
 
         switch direction {
@@ -103,9 +137,8 @@ final class GameLogic: ObservableObject {
             var gainedTotal = 0
 
             for row in 0..<4 {
-                let reversed = Array(board[row].reversed())
-                let result = moveLineLeft(reversed)
-                board[row] = Array(result.line.reversed())
+                let result = moveLineRight(board[row])
+                board[row] = result.line
                 gainedTotal += result.gained
             }
 
@@ -118,19 +151,8 @@ final class GameLogic: ObservableObject {
             var gainedTotal = 0
 
             for column in 0..<4 {
-                let values = [
-                    board[0][column],
-                    board[1][column],
-                    board[2][column],
-                    board[3][column]
-                ]
-                let result = moveLineLeft(values)
-
-                board[0][column] = result.line[0]
-                board[1][column] = result.line[1]
-                board[2][column] = result.line[2]
-                board[3][column] = result.line[3]
-
+                let result = moveLineLeft(getColumn(column))
+                setColumn(column, values: result.line)
                 gainedTotal += result.gained
             }
 
@@ -143,21 +165,8 @@ final class GameLogic: ObservableObject {
             var gainedTotal = 0
 
             for column in 0..<4 {
-                let values = [
-                    board[0][column],
-                    board[1][column],
-                    board[2][column],
-                    board[3][column]
-                ]
-                let reversed = Array(values.reversed())
-                let result = moveLineLeft(reversed)
-                let output = Array(result.line.reversed())
-
-                board[0][column] = output[0]
-                board[1][column] = output[1]
-                board[2][column] = output[2]
-                board[3][column] = output[3]
-
+                let result = moveLineRight(getColumn(column))
+                setColumn(column, values: result.line)
                 gainedTotal += result.gained
             }
 
@@ -171,7 +180,6 @@ final class GameLogic: ObservableObject {
     }
 
     private func hasMoves() -> Bool {
-        //todo позже упростить проверку доступных ходов при необходимости
         if board.flatMap({ $0 }).contains(0) {
             return true
         }
