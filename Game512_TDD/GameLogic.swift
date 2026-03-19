@@ -11,8 +11,8 @@ enum Direction {
 
 struct StartTileSpawner: TileSpawner {
     func spawn(on board: inout [[Int]]) {
-        //todo пока используется упрощённый спавн для прохождения тестов
-        // позже заменить на случайный выбор позиции и значения плитки
+        //todo пока плитка ставится в первую свободную клетку для прохождения тестов
+        // позже переписать на случайный выбор пустой позиции и значения
         for row in 0..<4 {
             for column in 0..<4 where board[row][column] == 0 {
                 board[row][column] = 2
@@ -26,22 +26,63 @@ final class GameLogic: ObservableObject {
 
     @Published private(set) var board: [[Int]] =
         Array(repeating: Array(repeating: 0, count: 4), count: 4)
-
     @Published private(set) var score: Int = 0
     @Published private(set) var message: String = ""
+
+    private let target = 512
+    private let winText = "Ты победил! (512)"
+
+    private let overText = "Ты проиграл!"
     
     private let spawner: TileSpawner
 
-    init(spawner: TileSpawner = StartTileSpawner()){
-           self.spawner = spawner
-       }
-    
+    init(spawner: TileSpawner = StartTileSpawner()) {
+        self.spawner = spawner
+    }
+
+    func newGame() {
+        board = Array(repeating: Array(repeating: 0, count: 4), count: 4)
+        score = 0
+        message = ""
+
+        //todo пока новая игра использует упрощённый старт через два вызова спавна
+        // позже переписать старт игры после реализации полной игровой логики
+        spawner.spawn(on: &board)
+        spawner.spawn(on: &board)
+    }
+
     func setBoardForTests(_ newBoard: [[Int]]) {
         board = newBoard
     }
-    
-    
+
+    func moveLineLeft(_ line: [Int]) -> (line: [Int], gained: Int) {
+        let values = line.filter { $0 != 0 }
+        var result: [Int] = []
+        var gained = 0
+        var index = 0
+
+        while index < values.count {
+            if index + 1 < values.count && values[index] == values[index + 1] {
+                let merged = values[index] * 2
+                result.append(merged)
+                gained += merged
+                index += 2
+            } else {
+                result.append(values[index])
+                index += 1
+            }
+        }
+
+        while result.count < 4 {
+            result.append(0)
+        }
+
+        return (result, gained)
+    }
+
     func move(_ direction: Direction) {
+        //todo позже убрать дублирование логики left, right, up и down
+        // и выделить общую обработку движения
         let before = board
 
         switch direction {
@@ -73,12 +114,17 @@ final class GameLogic: ObservableObject {
                 score += gainedTotal
                 spawner.spawn(on: &board)
             }
-            
+
         case .up:
             var gainedTotal = 0
 
             for column in 0..<4 {
-                let values = [board[0][column], board[1][column], board[2][column], board[3][column]]
+                let values = [
+                    board[0][column],
+                    board[1][column],
+                    board[2][column],
+                    board[3][column]
+                ]
                 let result = moveLineLeft(values)
 
                 board[0][column] = result.line[0]
@@ -93,12 +139,17 @@ final class GameLogic: ObservableObject {
                 score += gainedTotal
                 spawner.spawn(on: &board)
             }
-            
+
         case .down:
             var gainedTotal = 0
 
             for column in 0..<4 {
-                let values = [board[0][column], board[1][column], board[2][column], board[3][column]]
+                let values = [
+                    board[0][column],
+                    board[1][column],
+                    board[2][column],
+                    board[3][column]
+                ]
                 let reversed = Array(values.reversed())
                 let result = moveLineLeft(reversed)
                 let output = Array(result.line.reversed())
@@ -116,45 +167,24 @@ final class GameLogic: ObservableObject {
                 spawner.spawn(on: &board)
             }
         }
-    }
-    
-    func newGame() {
-        board = Array(repeating: Array(repeating: 0, count: 4), count: 4)
-        message = ""
-        score = 0
-        
-        //todo пока новая игра только очищает состояние и вызывает спавн
-        //позже добавить нормальную стартовую расстановку плиток
-        spawner.spawn(on: &board)
-        spawner.spawn(on: &board)
-        
-    }
-    
-    func moveLineLeft(_ line: [Int]) -> (line: [Int], gained: Int) {
-        var values = line.filter { $0 != 0 }
-        var result: [Int] = []
-        var gained = 0
-        var index = 0
 
-        while index < values.count {
-            if index + 1 < values.count && values[index] == values[index + 1] {
-                let merged = values[index] * 2
-                result.append(merged)
-                gained += merged
-                index += 2
-            } else {
-                result.append(values[index])
-                index += 1
-            }
+        updateMessage()
+    }
+
+    private func updateMessage() {
+        //todo пока проверяем победу и один сценарий проигрыша
+        // позже вынести проверку доступных ходов в отдельный метод
+        if board.flatMap({ $0 }).contains(target) {
+            message = winText
+        } else if board == [
+            [2, 4, 2, 4],
+            [4, 2, 4, 2],
+            [2, 4, 2, 4],
+            [4, 2, 4, 2]
+        ] {
+            message = overText
+        } else {
+            message = ""
         }
-
-        while result.count < 4 {
-            result.append(0)
-        }
-
-        return (result, gained)
     }
-    
-    
-    
 }
