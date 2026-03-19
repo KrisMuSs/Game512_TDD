@@ -186,20 +186,33 @@ final class Game512_TDDTests: XCTestCase {
     }
     
     func test_WinMessage() {
-        let sut = GameLogic()
-        sut.setBoardForTests([
+        let logic = GameLogic()
+        logic.setBoardForTests([
             [512, 0, 0, 0],
             [0,   0, 0, 0],
             [0,   0, 0, 0],
             [0,   0, 0, 0]
         ])
 
-        sut.move(.left)
+        logic.move(.left)
 
-        XCTAssertEqual(sut.message, "Ты победил! (512)", "Если на поле есть 512, должно появиться сообщение о победе")
+        XCTAssertEqual(logic.message, "Ты победил! (512)", "Если на поле есть 512, должно появиться сообщение о победе")
     }
     
 }
 
+func test_gameLose() {
+    let logic = GameLogic()
+    logic.setBoardForTests([
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+        [2, 4, 2, 4],
+        [4, 2, 4, 2]
+    ])
+
+    logic.move(.left)
+
+    XCTAssertEqual(logic.message, "Ты проиграл!", "Если ходов нет, должно появиться сообщение о проигрыше")
+}
 
 
